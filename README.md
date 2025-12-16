@@ -4,7 +4,7 @@
 This project is a simple **Object-Oriented Programming (OOP)** implementation written for a university assignment.  
 The goal of **Stage 1** is to build the basic structure of the logistics system using Python classes.
 
-## 🎯 Stage 1 Requirements Completed
+# Stage 1 Requirements Completed
 
 - A `Package` class with attributes such as ID, sender, receiver, weight, and destination.
 - A `DeliveryPerson` class representing employees who deliver packages.
@@ -15,19 +15,19 @@ The goal of **Stage 1** is to build the basic structure of the logistics system 
 - Ability to track the delivery status of a package.
 - All classes are written using OOP principles.
 
-## 📁 Files
+# Files
 
 - `logistics_system.py` — Main Python file containing Stage 1 implementation.
 - `uml.md` — UML class diagram (Mermaid format).
 - `README.md` — This file.
 
-## 🧪 How to Run
+# How to Run
 
 ```bash
 python3 logistics_system.py
 ```
 
-## 👨‍💻 Student Note
+# Student Note
 
 This project represents the first step of building a larger logistics software.  
 In Stage 1, my main focus was understanding class structures and the relationships between objects.  
