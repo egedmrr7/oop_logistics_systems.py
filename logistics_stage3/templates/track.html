@@ -1,0 +1,9 @@
+<form method="post">
+    Package ID: <input name="pid">
+    <button>Track</button>
+</form>
+
+{% if package %}
+<p>ID: {{ package[0] }}</p>
+<p>Status: {{ package[4] }}</p>
+{% endif %}
