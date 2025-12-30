@@ -1,80 +1,35 @@
 # Logistics and Delivery Optimization System
 # Stage 3 – Advanced Application
 
-Bu proje, üniversite dersi kapsamında geliştirilen bir **Lojistik ve Teslimat Yönetim Sistemi**dir.  
-Proje aşamalı olarak ilerlemiştir ve bu repo **Stage 3 (Advanced Application)** seviyesini temsil etmektedir.
+# Logistics and Delivery Optimization System – Stage 3
 
----
+This project is a university assignment developed step by step.
 
-# Proje Aşamaları Özeti
+## Stage 1 – Architecture
+- Core classes: Package, Hub, Route, DeliverySystem
+- Object-Oriented design
 
-# Stage 1 – Architecture
-- Package, Courier, Hub, Route ve DeliverySystem sınıfları tasarlandı
-- Nesne tabanlı mimari kuruldu
+## Stage 2 – Basic Implementation
+- Package registration
+- Package tracking by ID
+- Sorting packages by priority, weight, destination
+- Distance calculation between hubs
 
-# Stage 2 – Basic Implementation
-- Paket kayıt sistemi
-- Paket takip (tracking ID ile arama)
-- Paket sıralama (öncelik, ağırlık, varış noktası)
-- Hub’lar arası mesafe hesaplama
+## Stage 3 – Advanced Application
+- Multi-hub routing
+- Shortest path calculation (Greedy / Dijkstra logic)
+- Delivery grouping optimization
+- SQLite database integration
+- Web interface using Flask
+- Performance reports (average delivery time, success ratio)
 
-# Stage 3 – Advanced Application (BU AŞAMA)
-✔ Multi-hub routing  
-✔ Zaman ve mesafe optimizasyonu  
-✔ Web tabanlı veri girişi ve raporlama  
-✔ Algoritmalar ve performans analizi  
-✔ Veritabanı (SQLite) entegrasyonu  
+## Technologies
+- Python
+- Flask
+- SQLite
+- HTML / CSS
 
----
-
-# Kullanılan Teknolojiler
-
-- **Python 
-- *Flask (Web Framework)
-- *SQLite (Database)
-- *HTML / CSS
-- *Object Oriented Programming (OOP)
-
----
-
-# Proje Klasör Yapısı                                                                         
-
-
----
-
-## Web Özellikleri (Stage 3)
-
-# Paket Ekleme
-- Web arayüzünden yeni paket kaydı
-- Tracking ID ile sistemde saklama
-
-# Paket Takibi
-- Tracking ID girilerek paket durumu görüntüleme
-
-#Rota Optimizasyonu
-- Hub’lar arası **en kısa mesafe hesaplama**
-- Greedy / Dijkstra mantığına uygun yapı
-
-# Raporlama
-- Ortalama teslimat süresi
-- Başarı oranı
-- Toplam paket sayısı
-
----
-
-##Kullanılan Algoritmalar
-
-- *Mesafe Hesabı:* Öklidyen mesafe
-- *En Kısa Yol:*Dijkstra (basitleştirilmiş)
-- *Teslimat Gruplama: Aynı hedefe giden paketleri gruplayarak rota oluşturma
-- *Sıralama:** Priority, weight, destination bazlı sorting
-
----
-
-# Çalıştırma
-
+## How to Run
 ```bash
 python app.py
-
-
 
