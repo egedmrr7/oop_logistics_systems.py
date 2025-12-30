@@ -1,0 +1,8 @@
+<h1>Logistics System</h1>
+<a href="/add">Add Package</a> | <a href="/report">Report</a>
+
+<ul>
+{% for p in packages %}
+  <li>{{ p[0] }} → {{ p[2] }} (Priority: {{ p[3] }})</li>
+{% endfor %}
+</ul>
