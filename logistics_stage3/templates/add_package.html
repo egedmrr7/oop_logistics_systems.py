@@ -2,19 +2,40 @@
 <html>
 <head>
     <title>Add Package</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<h2>Add New Package</h2>
 
-<form method="post">
-    Package ID: <input type="text" name="package_id"><br>
-    Origin: <input type="text" name="origin"><br>
-    Destination: <input type="text" name="destination"><br>
-    Weight: <input type="number" name="weight"><br>
-    Priority: <input type="number" name="priority"><br>
-    <button type="submit">Add</button>
-</form>
+<div class="container">
+    <h2>Add Package</h2>
+
+    <form method="post">
+        <label>Package ID</label>
+        <input type="text" name="package_id" required>
+
+        <label>Origin Hub</label>
+        <select name="origin">
+            {% for h in hubs %}
+                <option value="{{ h.hub_id }}">{{ h.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Destination Hub</label>
+        <select name="destination">
+            {% for h in hubs %}
+                <option value="{{ h.hub_id }}">{{ h.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Priority</label>
+        <input type="number" name="priority" min="0" max="10">
+
+        <button type="submit">Add Package</button>
+    </form>
+
+    <br>
+    <a href="/">Back</a>
+</div>
 
 </body>
 </html>
