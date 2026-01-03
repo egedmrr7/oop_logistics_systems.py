@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gruplandırılmış Paketler</title>
+</head>
+<body>
+    <h1>Şehirlere Göre Paket Grupları</h1>
+    
+    {% if groups %}
+        {% for destination, package_ids in groups.items() %}
+            <div style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
+                <h3> Varış Noktası: {{ destination }}</h3>
+                <p><strong>Paket ID'leri:</strong> {{ package_ids|join(', ') }}</p>
+                <p>Toplam Paket: {{ package_ids|length }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Henüz gruplandırılacak paket bulunamadı.</p>
+    {% endif %}
+
+    <br>
+    <a href="/">Ana Sayfaya Dön</a>
+</body>
+</html>
