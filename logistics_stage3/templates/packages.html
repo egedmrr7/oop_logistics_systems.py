@@ -1,26 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
-    <title>Packages</title>
+    <meta charset="UTF-8">
+    <title>Lojistik Yönetim Paneli</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 20px; background-color: #f8f9fa; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { border-bottom: 2px solid #007bff; padding-bottom: 10px; color: #007bff; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        .btn { display: inline-block; padding: 10px 18px; background: #28a745; color: white; text-decoration: none; border-radius: 6px; }
+        
+        /* İşlem Butonları */
+        .btn-detail { background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; }
+        .btn-delete { background: #dc3545; padding: 6px 12px; border-radius: 4px; color: white; text-decoration: none; font-size: 13px; font-weight: bold; margin-left: 5px; }
+        
+        /* İstatistik Kartları */
+        .stats-grid { display: flex; gap: 15px; margin-bottom: 30px; }
+        .stat-card { flex: 1; color: white; padding: 15px; border-radius: 10px; text-align: center; }
+        
+        /* Gruplandırma Kutuları */
+        .group-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .group-box { border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #fff; border-left: 5px solid #17a2b8; }
+        
+        /* Öncelik Rozeti */
+        .priority-badge { background: #e7f1ff; color: #007bff; padding: 4px 8px; border-radius: 20px; font-weight: bold; font-size: 12px; }
+    </style>
 </head>
 <body>
-<h2>Registered Packages</h2>
 
-<table border="1">
-<tr>
-    <th>ID</th><th>Origin</th><th>Destination</th><th>Weight</th><th>Priority</th>
-</tr>
+<div class="container">
+    <h2>📦 Lojistik Paneli <a href="/add" class="btn" style="float: right;">+ Yeni Ekle</a></h2>
 
-{% for p in packages %}
-<tr>
-    <td>{{p[0]}}</td>
-    <td>{{p[1]}}</td>
-    <td>{{p[2]}}</td>
-    <td>{{p[3]}}</td>
-    <td>{{p[4]}}</td>
-</tr>
-{% endfor %}
-</table>
+    <div class="stats-grid">
+        <div class="stat-card" style="background: #007bff;">
+            <h4>Toplam Paket</h4>
+            <p style="font-size: 24px; font-weight: bold; margin: 5px 0;">{{ packages|length }}</p>
+        </div>
+        <div class="stat-card" style="background: #6f42c1;">
+            <h4>Varış Noktası Sayısı</h4>
+            <p style="font-size: 24px; font-weight: bold; margin: 5px 0;">{{ groups|length }}</p>
+        </div>
+    </div>
+
+    <h3>📝 Kayıtlı Paketler (Önceliğe Göre Sıralı)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Çıkış</th>
+                <th>Varış</th>
+                <th>Öncelik</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in packages %}
+            <tr>
+                <td><strong>{{ p.package_id }}</strong></td>
+                <td>{{ p.origin }}</td>
+                <td>{{ p.destination }}</td>
+                <td><span class="priority-badge">{{ p.priority }}</span></td>
+                <td>
+                    <button class="btn-detail" onclick="alert('📋 PAKET TEKNİK DETAYLARI\n--------------------------\n🆔 Paket ID: {{ p.package_id }}\n📍 Nereden: {{ p.origin }}\n🏁 Nereye: {{ p.destination }}\n⚖️ Ağırlık: {{ p.weight }} kg\n📐 Boyutlar: {{ p.volume }}\n⭐ Öncelik Skoru: {{ p.priority }}\n🔄 Durum: {{ p.status }}')">
+                        🔍 Detay
+                    </button>
+                    
+                    <a href="/delete/{{ p.package_id }}" class="btn-delete" onclick="return confirm('Bu paketi kalıcı olarak silmek istediğinize emin misiniz?')">
+                        🗑️ Sil
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3 style="margin-top: 40px;">📍 Şehirlere Göre Dağılım</h3>
+    <div class="group-container">
+        {% for destination, ids in groups.items() %}
+            <div class="group-box">
+                <strong>🏙️ {{ destination }}</strong>
+                <p style="font-size: 12px; color: #666; margin: 8px 0;">ID Listesi: {{ ids|join(', ') }}</p>
+                <small style="background: #f1f3f5; padding: 2px 6px; border-radius: 4px;">Toplam: {{ ids|length }} Adet</small>
+            </div>
+        {% endfor %}
+    </div>
+</div>
 
 </body>
 </html>
