@@ -1,161 +1,68 @@
 import sqlite3
-from datetime import datetime
 
-DB_NAME = "logistics.db"
+def get_db_connection():
+    """Veritabanına bağlantı oluşturur."""
+    conn = sqlite3.connect('logistics.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
-
-# --------------------
-# CONNECTION
-# --------------------
-def get_connection():
-    return sqlite3.connect(DB_NAME)
-
-
-# --------------------
-# INITIALIZATION
-# --------------------
 def init_db():
-    conn = get_connection()
-    cur = conn.cursor()
-
-    # Packages table
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS packages (
-        id TEXT PRIMARY KEY,
-        origin TEXT,
-        destination TEXT,
-        priority INTEGER,
-        status TEXT,
-        created_at TEXT
-    )
-    """)
-
-    # Hubs table
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS hubs (
-        id TEXT PRIMARY KEY,
-        name TEXT
-    )
-    """)
-
-    # Hub distances (for routing / Dijkstra)
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS hub_distances (
-        from_hub TEXT,
-        to_hub TEXT,
-        distance INTEGER,
-        PRIMARY KEY (from_hub, to_hub)
-    )
-    """)
-
+    """Tabloyu eksiksiz sütunlarla oluşturur."""
+    conn = get_db_connection()
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS packages (
+            package_id TEXT PRIMARY KEY,
+            origin TEXT,
+            destination TEXT,
+            priority INTEGER,
+            weight TEXT,
+            volume TEXT,
+            status TEXT DEFAULT 'Beklemede'
+        )
+    ''')
     conn.commit()
     conn.close()
 
-
-# --------------------
-# PACKAGE OPERATIONS
-# --------------------
-def insert_package(package):
-    conn = get_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        INSERT INTO packages (id, origin, destination, priority, status, created_at)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """, (
-        package.package_id,
-        package.origin,
-        package.destination,
-        package.priority,
-        package.status,
-        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    ))
-
+def insert_package(pkg):
+    """Yeni bir paketi veritabanına kaydeder."""
+    conn = get_db_connection()
+    conn.execute(
+        "INSERT INTO packages (package_id, origin, destination, priority, weight, volume) VALUES (?, ?, ?, ?, ?, ?)",
+        (pkg.package_id, pkg.origin, pkg.destination, pkg.priority, pkg.weight, pkg.volume)
+    )
     conn.commit()
     conn.close()
-
 
 def fetch_all_packages():
-    conn = get_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        SELECT id, origin, destination, priority, status
-        FROM packages
-        ORDER BY priority DESC
-    """)
-
-    rows = cur.fetchall()
+    """Tüm paketleri liste olarak döner (services.py için)."""
+    conn = get_db_connection()
+    # Verileri liste (tuple) formatında alıyoruz
+    rows = conn.execute("SELECT package_id, origin, destination, priority, weight, volume, status FROM packages").fetchall()
     conn.close()
     return rows
-
 
 def update_package_status(package_id, status):
-    conn = get_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        UPDATE packages
-        SET status = ?
-        WHERE id = ?
-    """, (status, package_id))
-
+    """Paket durumunu günceller."""
+    conn = get_db_connection()
+    conn.execute("UPDATE packages SET status = ? WHERE package_id = ?", (status, package_id))
     conn.commit()
     conn.close()
-
-
-# --------------------
-# HUB OPERATIONS
-# --------------------
-def insert_hub(hub_id, name):
-    conn = get_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        INSERT OR IGNORE INTO hubs (id, name)
-        VALUES (?, ?)
-    """, (hub_id, name))
-
-    conn.commit()
-    conn.close()
-
 
 def fetch_all_hubs():
-    conn = get_connection()
-    cur = conn.cursor()
-
-    cur.execute("SELECT id, name FROM hubs")
-    rows = cur.fetchall()
-
+    """Eğer hub tablon varsa onları çeker (Hata almamak için boş dönebilir)."""
+    conn = get_db_connection()
+    # Hub tablon henüz yoksa hata vermemesi için kontrol ekleyebilirsin
+    try:
+        rows = conn.execute("SELECT * FROM hubs").fetchall()
+    except:
+        rows = []
     conn.close()
     return rows
 
-
-# --------------------
-# HUB DISTANCE OPERATIONS
-# --------------------
-def insert_hub_distance(from_hub, to_hub, distance):
-    conn = get_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        INSERT OR REPLACE INTO hub_distances (from_hub, to_hub, distance)
-        VALUES (?, ?, ?)
-    """, (from_hub, to_hub, distance))
-
+def insert_hub(hub_id, name):
+    """Yeni hub ekler."""
+    conn = get_db_connection()
+    conn.execute("CREATE TABLE IF NOT EXISTS hubs (id TEXT PRIMARY KEY, name TEXT)")
+    conn.execute("INSERT INTO hubs (id, name) VALUES (?, ?)", (hub_id, name))
     conn.commit()
     conn.close()
-
-
-def fetch_hub_distances():
-    conn = get_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        SELECT from_hub, to_hub, distance
-        FROM hub_distances
-    """)
-
-    rows = cur.fetchall()
-    conn.close()
-    return rows
