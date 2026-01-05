@@ -1,41 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
-    <title>Add Package</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <title>Yeni Paket Kaydı</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 40px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 450px; }
+        .group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 14px; background: #1a73e8; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .back-link { display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none; font-size: 14px; }
+    </style>
 </head>
 <body>
-
-<div class="container">
-    <h2>Add Package</h2>
-
-    <form method="post">
-        <label>Package ID</label>
-        <input type="text" name="package_id" required>
-
-        <label>Origin Hub</label>
-        <select name="origin">
-            {% for h in hubs %}
-                <option value="{{ h.hub_id }}">{{ h.name }}</option>
-            {% endfor %}
-        </select>
-
-        <label>Destination Hub</label>
-        <select name="destination">
-            {% for h in hubs %}
-                <option value="{{ h.hub_id }}">{{ h.name }}</option>
-            {% endfor %}
-        </select>
-
-        <label>Priority</label>
-        <input type="number" name="priority" min="0" max="10">
-
-        <button type="submit">Add Package</button>
+<div class="card">
+    <h2>📦 Yeni Paket Kaydı</h2>
+    <form action="/add" method="POST">
+        <div class="group">
+            <label>Paket ID:</label>
+            <input type="text" name="package_id" placeholder="Örn: PKT001" required>
+        </div>
+        <div class="group">
+            <label>Çıkış Şehri:</label>
+            <select name="origin" required>
+                <option value="İstanbul">İstanbul</option>
+                <option value="Ankara">Ankara</option>
+                <option value="İzmir">İzmir</option>
+                <option value="Bursa">Bursa</option>
+                <option value="Sakarya">Sakarya</option>
+                <option value="Çanakkale">Çanakkale</option>
+                <option value="Manisa">Manisa</option>
+                <option value="Erzurum">Erzurum</option>
+                <option value="Kars">Kars</option>
+                <option value="Eskişehir">Eskişehir</option>
+                <option value="Muğla">Muğla</option>
+            </select>
+        </div>
+        <div class="group">
+            <label>Varış Şehri:</label>
+            <select name="destination" required>
+                <option value="İstanbul">İstanbul</option>
+                <option value="Ankara">Ankara</option>
+                <option value="İzmir">İzmir</option>
+                <option value="Bursa">Bursa</option>
+                <option value="Sakarya">Sakarya</option>
+                <option value="Çanakkale">Çanakkale</option>
+                <option value="Manisa">Manisa</option>
+                <option value="Erzurum">Erzurum</option>
+                <option value="Kars">Kars</option>
+                <option value="Eskişehir">Eskişehir</option>
+                <option value="Muğla">Muğla</option>
+            </select>
+        </div>
+        <div class="group">
+            <label>Ağırlık (Kg):</label>
+            <input type="number" name="weight" step="0.1" placeholder="Örn: 10.5" required>
+        </div>
+        <div class="group">
+            <label>Boyut (En x Boy x Yükseklik):</label>
+            <input type="text" id="vol" name="volume" placeholder="Örn: 20x30x40" required maxlength="11">
+        </div>
+        <div class="group">
+            <label>Önem Derecesi (1-500):</label>
+            <input type="number" name="priority" placeholder="Örn: 100" required>
+        </div>
+        <button type="submit" class="btn">Sisteme Kaydet</button>
+        <a href="/" class="back-link">← Listeye Geri Dön</a>
     </form>
-
-    <br>
-    <a href="/">Back</a>
 </div>
 
+<script>
+    // Sayı girdikçe araya otomatik 'x' koyan geliştirilmiş kod
+    document.getElementById('vol').addEventListener('input', function (e) {
+        // Sadece sayıları al
+        let v = e.target.value.replace(/[^0-9]/g, ''); 
+        let final = "";
+        
+        for (let i = 0; i < v.length; i++) {
+            // Her 2 rakamda bir ve en fazla 2 tane 'x' olacak şekilde (20x30x40)
+            if (i > 0 && i % 2 === 0 && (final.match(/x/g) || []).length < 2) {
+                final += "x";
+            }
+            final += v[i];
+        }
+        e.target.value = final;
+    });
+</script>
 </body>
 </html>
