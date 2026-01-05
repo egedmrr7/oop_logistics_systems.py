@@ -28,6 +28,7 @@ This project is a university assignment developed step by step.
 - Flask
 - SQLite
 - HTML / CSS
+- Javascript
 
 ## How to Run
 ```bash
